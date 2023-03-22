@@ -34,29 +34,33 @@ class TelegramChannel(Channel):
 
     def handle(self, msg):
         logger.debug("[Telegram private] receive msg: " + msg.text)
+        single_chat_users = channel_conf_val(const.TELEGRAM, 'single_chat_users')
         img_match_prefix = self.check_prefix(msg, channel_conf_val(const.TELEGRAM, 'image_create_prefix'))
         # 如果是图片请求
         if img_match_prefix:
             thread_pool.submit(self._do_send_img, msg, str(msg.chat.id))
         else:
-            thread_pool.submit(self._dosend,msg.text,msg)
+            if ('ALL_USERS' in single_chat_users or msg.from_user.username in single_chat_users):
+                thread_pool.submit(self._dosend,msg.text,msg)
 
     def handle_group(self, msg):
         logger.debug("[Telegram group] receive msg: " + msg.text)
         img_match_prefix = self.check_prefix(msg, channel_conf_val(const.TELEGRAM, 'image_create_prefix'))
         
+        group_chat_list = channel_conf_val(const.TELEGRAM, 'group_chat_list')
         match_prefix = self.check_prefix(msg, channel_conf_val(const.TELEGRAM, 'group_chat_prefix'))
         match_keyword = self.check_keyword(msg, channel_conf_val(const.TELEGRAM, 'group_chat_keyword'))
         # 如果是图片请求
         if img_match_prefix:
             thread_pool.submit(self._do_send_img, msg, str(msg.chat.id))
         else:
-            if match_prefix or match_keyword:
-                if match_prefix != '':
-                    str_list = msg.text.split(match_prefix, 1)
-                    if len(str_list) == 2:
-                        msg.text = str_list[1].strip()
-                thread_pool.submit(self._dosend,msg.text,msg)
+            if ('ALL_GROUP' in group_chat_list or msg.chat.title in group_chat_list):
+                if match_prefix or match_keyword:
+                    if match_prefix != '':
+                        str_list = msg.text.split(match_prefix, 1)
+                        if len(str_list) == 2:
+                            msg.text = str_list[1].strip()
+                    thread_pool.submit(self._dosend,msg.text,msg)
         
     def _dosend(self,query,msg):
         context= dict()
@@ -103,3 +107,11 @@ class TelegramChannel(Channel):
             if (msg.text.find(keyword) != -1):
                 return True
         return False
+    
+    def check_contain(self, content, keyword_list):
+        if not keyword_list:
+            return None
+        for ky in keyword_list:
+            if content.find(ky) != -1:
+                return True
+        return None
