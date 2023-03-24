@@ -394,10 +394,10 @@ pip install pyTelegramBotAPI
     },
 }
 ```
-+ `single_chat_users` 可以向机器人私聊的用户，默认为`ALL_USERS`所有用户，可以填自己的用户名避免其他人向机器人提问。
-+ `group_chat_list` 机器人可以支持在那些群里回复，默认为`ALL_GROUP`所有group，可以填自己的群避免其他人把机器人加到其他群。（可以通过`BotFather`设置`/setjoingroups`来限制别人把机器人加到其他群里）
-+ `group_chat_prefix` 聊天前缀匹配，一般用来匹配@特定人，匹配成功后会去掉前缀再发送给chatgpt
-+ `group_chat_keyword` 聊天关键字匹配
++ `single_chat_users` 可以向机器人私聊的用户，默认为`ALL_USERS`所有用户，可以填自己的用户ID避免其他人向机器人提问，用户ID，不需要带`@`，比如`techxiaofei`。
++ `group_chat_list` 机器人可以支持在那些群里回复，默认为`ALL_GROUP`所有group，可以填自己的`群名`避免其他人把机器人加到其他群。（可以通过`BotFather`设置`/setjoingroups`来限制别人把机器人加到其他群里）
++ `group_chat_prefix` 聊天前缀匹配，一般用来匹配`@`特定人，匹配成功后会去掉前缀再发送给chatgpt，前缀匹配需要带`@`，比如`@techxiaofei`。
++ `group_chat_keyword` 聊天关键字匹配，匹配到关键字就会回复。
 
 ### 7.Gmail
 
