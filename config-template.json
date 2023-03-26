@@ -56,9 +56,13 @@
     },
 
     "http": {
+      "image_create_prefix": ["画", "draw", "Draw"],
       "http_auth_secret_key": "6d25a684-9558-11e9-aa94-efccd7a0659b",
       "http_auth_password": "6.67428e-11",
       "port": "80"
     }
+  },
+  "common": {
+    "clear_memory_commands": ["#清除记忆"]
   }
 }

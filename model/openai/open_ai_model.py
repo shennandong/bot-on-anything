@@ -1,7 +1,7 @@
 # encoding:utf-8
 
 from model.model import Model
-from config import model_conf
+from config import model_conf, common_conf_val
 from common import const
 from common import log
 import openai
@@ -20,7 +20,8 @@ class OpenAIModel(Model):
         if not context or not context.get('type') or context.get('type') == 'TEXT':
             log.info("[OPEN_AI] query={}".format(query))
             from_user_id = context['from_user_id']
-            if query == '#清除记忆':
+            clear_memory_commands = common_conf_val('clear_memory_commands', ['#清除记忆'])
+            if query in clear_memory_commands:
                 Session.clear_session(from_user_id)
                 return '记忆已清除'
 
@@ -134,7 +135,7 @@ class OpenAIModel(Model):
             )
             image_url = response['data'][0]['url']
             log.info("[OPEN_AI] image_url={}".format(image_url))
-            return image_url
+            return [image_url]
         except openai.error.RateLimitError as e:
             log.warn(e)
             if retry_count < 1:
