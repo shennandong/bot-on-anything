@@ -40,7 +40,7 @@ class TelegramChannel(Channel):
         if img_match_prefix:
             thread_pool.submit(self._do_send_img, msg, str(msg.chat.id))
         else:
-            if ('ALL_USERS' in single_chat_users or msg.from_user.username in single_chat_users):
+            if (not single_chat_users or 'ALL_USERS' in single_chat_users or msg.from_user.username in single_chat_users):
                 thread_pool.submit(self._dosend,msg.text,msg)
 
     def handle_group(self, msg):
@@ -54,7 +54,7 @@ class TelegramChannel(Channel):
         if img_match_prefix:
             thread_pool.submit(self._do_send_img, msg, str(msg.chat.id))
         else:
-            if ('ALL_GROUP' in group_chat_list or msg.chat.title in group_chat_list):
+            if (not group_chat_list or 'ALL_GROUP' in group_chat_list or msg.chat.title in group_chat_list):
                 if match_prefix or match_keyword:
                     if match_prefix != '':
                         str_list = msg.text.split(match_prefix, 1)
