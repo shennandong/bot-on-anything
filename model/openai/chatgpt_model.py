@@ -22,10 +22,6 @@ class ChatGPTModel(Model):
         if not context or not context.get('type') or context.get('type') == 'TEXT':
             log.info("[CHATGPT] query={}".format(query))
             from_user_id = context['from_user_id']
-            clear_memory_commands = common_conf_val('clear_memory_commands', ['#清除记忆'])
-            if query in clear_memory_commands:
-                Session.clear_session(from_user_id)
-                return '记忆已清除'
 
             new_query = Session.build_session_query(query, from_user_id)
             log.debug("[CHATGPT] session query={}".format(new_query))
